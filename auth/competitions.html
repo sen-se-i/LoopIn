@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Competitions | LoopIn</title>
+  <style>
+    .navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #FAFAFA;
+  padding: 10px 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+.navbar-right {
+  margin-left: auto;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.logo-icon {
+  height: 32px;
+  margin-right: 8px;
+}
+
+.logo-text {
+  font-weight: bold;
+  font-size: 20px;
+  color: #3366FF;
+}
+
+.navbar-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.navbar-center h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background-color: #FAFAFA;
+    }
+
+    .sticky-filter {
+  position: fixed;
+  top: 60px; /* <--- Push it below navbar (adjust if navbar height changes) */
+  left: 0;
+  right: 0;
+  background-color: white;
+  z-index: 100;
+  padding: 6px 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+    .filter-btn {
+      background-color: #3366FF;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .filter-popup {
+      display: none;
+      position: fixed;
+      top: 60px;
+      left: auto;
+      right: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      z-index: 99;
+    }
+
+    .filter-popup.show {
+      display: block;
+    }
+
+    .filter-popup h3 {
+      margin-top: 0;
+    }
+
+    .filter-group {
+      margin-bottom: 15px;
+    }
+
+    .filter-group label {
+      margin-right: 15px;
+    }
+
+    .event-list {
+      margin-top: 80px;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    .event-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      padding: 16px;
+    }
+
+    .event-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .event-card h4 {
+      margin: 8px 0 4px;
+    }
+
+    .event-card p {
+      font-size: 14px;
+      color: #555;
+    }
+    .filter-dropdown {
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  background-color: white;
+  color: #333;
+  font-weight: 500;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
+}
+
+  </style>
+</head>
+<body>
+<header class="navbar">
+  <div class="navbar-left" onclick="window.location.href='../../index.html'">
+    <img src="../ddddd.png" alt="LoopIn Logo" class="logo-icon">
+    <span class="logo-text">LoopIn</span>
+  </div>
+
+  <div class="navbar-center">
+    <h2>Competitions</h2>
+  </div>
+
+  <div class="navbar-right">
+    <button class="filter-btn" onclick="toggleFilter()">Filter</button>
+  </div>
+</header>
+
+
+<div class="filter-popup" id="filterPopup">
+  <div class="filter-group">
+    <h3>Select Region</h3>
+    <label><input type="radio" name="region" value="Dhaka"> Dhaka</label>
+    <label><input type="radio" name="region" value="Sylhet"> Sylhet</label>
+    <label><input type="radio" name="region" value="Mymensingh"> Mymensingh</label>
+    <label><input type="radio" name="region" value="Chattogram"> Chattogram</label>
+    <label><input type="radio" name="region" value="Rajshahi"> Rajshahi</label>
+    <label><input type="radio" name="region" value="Khulna"> Khulna</label>
+    <label><input type="radio" name="region" value="Cumilla"> Cumilla</label>
+  </div>
+
+  <div class="filter-group">
+    <h3>Sort By</h3>
+    <label><input type="checkbox" value="latest"> Latest First</label>
+    <label><input type="checkbox" value="prize"> Highest Prize</label>
+    <label><input type="checkbox" value="free"> Free Registration</label>
+    <label><input type="checkbox" value="impact"> Greater Impact</label>
+  </div>
+
+  <select class="filter-dropdown" id="interest-filter">
+  <option disabled selected>Select Interest Field</option>
+  <option value="math">Math</option>
+  <option value="physics">Physics</option>
+  <option value="biology">Biology</option>
+  <option value="chemistry">Chemistry</option>
+  <option value="informatics">Informatics</option>
+  <option value="debate">Debate</option>
+  <option value="robotics">Robotics</option>
+  <option value="business">Business</option>
+  <option value="arts">Arts</option>
+  <option value="photography">Photography</option>
+  <option value="law">Law</option>
+</select>
+
+
+  <button class="filter-btn" onclick="applyFilter()">Apply Filters</button>
+</div>
+
+<div class="event-list" id="eventList">
+  <!-- Dummy Events -->
+  <div class="event-card" data-region="Dhaka" data-free="true" data-date="2025-07-10" data-prize="10000" data-field="physics">
+    <img src="event1.jpg" alt="Event 1">
+    <h4>Physics Olympiad</h4>
+    <p>Region: Dhaka | Free Entry | Prize: 10,000 BDT</p>
+  </div>
+
+  <div class="event-card" data-region="Sylhet" data-free="false" data-date="2025-08-01" data-prize="5000" data-field="math">
+    <img src="event2.jpg" alt="Event 2">
+    <h4>Math League</h4>
+    <p>Region: Sylhet | Fee: 100 BDT | Prize: 5,000 BDT</p>
+  </div>
+
+  <div class="event-card" data-region="Chattogram" data-free="true" data-date="2025-07-20" data-prize="8000" data-field="robotics">
+    <img src="event3.jpg" alt="Event 3">
+    <h4>RoboChallenge</h4>
+    <p>Region: Chattogram | Free | Prize: 8,000 BDT</p>
+  </div>
+  <div class="event-card" data-region="Chattogram" data-free="true" data-date="2025-07-20" data-prize="8000" data-field="robotics">
+    <img src="event3.jpg" alt="Event 3">
+    <h4>RoboChallenge</h4>
+    <p>Region: Chattogram | Free | Prize: 8,000 BDT</p>
+  </div>
+  <div class="event-card" data-region="Chattogram" data-free="true" data-date="2025-07-20" data-prize="8000" data-field="robotics">
+    <img src="event3.jpg" alt="Event 3">
+    <h4>RoboChallenge</h4>
+    <p>Region: Chattogram | Free | Prize: 8,000 BDT</p>
+  </div>
+  <div class="event-card" data-region="Chattogram" data-free="true" data-date="2025-07-20" data-prize="8000" data-field="robotics">
+    <img src="event3.jpg" alt="Event 3">
+    <h4>RoboChallenge</h4>
+    <p>Region: Chattogram | Free | Prize: 8,000 BDT</p>
+  </div>
+  <div class="event-card" data-region="Chattogram" data-free="true" data-date="2025-07-20" data-prize="8000" data-field="robotics">
+    <img src="event3.jpg" alt="Event 3">
+    <h4>RoboChallenge</h4>
+    <p>Region: Chattogram | Free | Prize: 8,000 BDT</p>
+  </div>
+  <div class="event-card" data-region="Chattogram" data-free="true" data-date="2025-07-20" data-prize="8000" data-field="robotics">
+    <img src="event3.jpg" alt="Event 3">
+    <h4>RoboChallenge</h4>
+    <p>Region: Chattogram | Free | Prize: 8,000 BDT</p>
+  </div>
+  <div class="event-card" data-region="Chattogram" data-free="true" data-date="2025-07-20" data-prize="8000" data-field="robotics">
+    <img src="event3.jpg" alt="Event 3">
+    <h4>RoboChallenge</h4>
+    <p>Region: Chattogram | Free | Prize: 8,000 BDT</p>
+  </div>
+  <div class="event-card" data-region="Chattogram" data-free="true" data-date="2025-07-20" data-prize="8000" data-field="robotics">
+    <img src="event3.jpg" alt="Event 3">
+    <h4>RoboChallenge</h4>
+    <p>Region: Chattogram | Free | Prize: 8,000 BDT</p>
+  </div>
+  <div class="event-card" data-region="Chattogram" data-free="true" data-date="2025-07-20" data-prize="8000" data-field="robotics">
+    <img src="event3.jpg" alt="Event 3">
+    <h4>RoboChallenge</h4>
+    <p>Region: Chattogram | Free | Prize: 8,000 BDT</p>
+  </div>
+  <div class="event-card" data-region="Chattogram" data-free="true" data-date="2025-07-20" data-prize="8000" data-field="robotics">
+    <img src="event3.jpg" alt="Event 3">
+    <h4>RoboChallenge</h4>
+    <p>Region: Chattogram | Free | Prize: 8,000 BDT</p>
+  </div>
+  <div class="event-card" data-region="Chattogram" data-free="true" data-date="2025-07-20" data-prize="8000" data-field="robotics">
+    <img src="event3.jpg" alt="Event 3">
+    <h4>RoboChallenge</h4>
+    <p>Region: Chattogram | Free | Prize: 8,000 BDT</p>
+  </div>
+  <div class="event-card" data-region="Chattogram" data-free="true" data-date="2025-07-20" data-prize="8000" data-field="robotics">
+    <img src="event3.jpg" alt="Event 3">
+    <h4>RoboChallenge</h4>
+    <p>Region: Chattogram | Free | Prize: 8,000 BDT</p>
+  </div>
+  <div class="event-card" data-region="Chattogram" data-free="true" data-date="2025-07-20" data-prize="8000" data-field="robotics">
+    <img src="event3.jpg" alt="Event 3">
+    <h4>RoboChallenge</h4>
+    <p>Region: Chattogram | Free | Prize: 8,000 BDT</p>
+  </div>
+  <div class="event-card" data-region="Chattogram" data-free="true" data-date="2025-07-20" data-prize="8000" data-field="robotics">
+    <img src="event3.jpg" alt="Event 3">
+    <h4>RoboChallenge</h4>
+    <p>Region: Chattogram | Free | Prize: 8,000 BDT</p>
+  </div>
+</div>
+
+<script>
+function toggleFilter() {
+  document.getElementById('filterPopup').classList.toggle('show');
+}
+
+function applyFilter() {
+  const selectedRegion = document.querySelector('input[name="region"]:checked')?.value;
+  const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+  const filters = {
+    latest: false,
+    prize: false,
+    free: false,
+    impact: false,
+    fields: []
+  };
+
+  checkboxes.forEach(box => {
+    if (box.checked) {
+      if (["latest", "prize", "free", "impact"].includes(box.value)) {
+        filters[box.value] = true;
+      } else {
+        filters.fields.push(box.value);
+      }
+    }
+  });
+
+  const events = Array.from(document.querySelectorAll('.event-card'));
+
+  let filtered = events;
+
+  if (selectedRegion) {
+    filtered = filtered.filter(e => e.dataset.region === selectedRegion);
+  }
+
+  if (filters.free) {
+    filtered = filtered.filter(e => e.dataset.free === "true");
+  }
+
+  if (filters.fields.length > 0) {
+    filtered = filtered.filter(e => filters.fields.includes(e.dataset.field));
+  }
+
+  if (filters.latest) {
+    filtered.sort((a, b) => new Date(b.dataset.date) - new Date(a.dataset.date));
+  }
+
+  if (filters.prize) {
+    filtered.sort((a, b) => Number(b.dataset.prize) - Number(a.dataset.prize));
+  }
+
+  const list = document.getElementById('eventList');
+  list.innerHTML = '';
+  filtered.forEach(e => list.appendChild(e));
+  toggleFilter();
+}
+</script>
+<script>
+  document.getElementById('interest-filter').addEventListener('change', function () {
+    const selected = this.value;
+    console.log("Selected interest:", selected);
+    // You could filter competitions here later
+  });
+</script>
+
+</body>
+</html>
