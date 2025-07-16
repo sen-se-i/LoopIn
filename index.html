@@ -79,13 +79,42 @@
     }
 
     .search-btn {
-      background-color: #d94123;
+      background-color: #3366FF;
       border: none;
       border-radius: 50%;
       padding: 10px;
       color: white;
       cursor: pointer;
     }
+    .suggestions-box {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  z-index: 999;
+  border: 1px solid #ddd;
+  border-radius: 0 0 8px 8px;
+  max-height: 240px;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.suggestions-box div {
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  transition: background 0.2s;
+}
+
+.suggestions-box div:hover {
+  background-color: #f0f4ff;
+}
+
+.search-input {
+  position: relative; /* add this to make suggestion box align properly */
+}
 
     .nav-links {
       display: flex;
@@ -401,6 +430,9 @@
 
 
   </style>
+  <script src="data/search-data.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 </head>
 <body>
 <div id="loading-screen">
@@ -415,7 +447,8 @@
     <div class="search-bar">
       <div class="search-input">
         <i class="fas fa-search"></i>
-        <input type="text" placeholder="Search events" />
+       <input type="text" id="searchBox" placeholder="Search events" />
+
       </div>
       <div class="divider"></div>
       <div class="location-select">
@@ -432,6 +465,7 @@
         <i class="fas fa-search"></i>
       </button>
     </div>
+<div id="search-suggestions" class="suggestions-box"></div>
 
     <nav class="nav-links">
     <a href="auth/competitions.html">Competitions</a>
@@ -655,6 +689,39 @@
     setTimeout(() => {
       loader.style.display = "none";
     }, 600); // Match transition time
+  });
+</script>
+<script src="search-data.js"></script> <!-- Make sure this is loaded first -->
+
+<script>
+  const searchBox = document.getElementById("searchBox");
+  const suggestionBox = document.getElementById("search-suggestions");
+
+  searchBox.addEventListener("input", () => {
+    const query = searchBox.value.toLowerCase();
+    suggestionBox.innerHTML = "";
+
+    if (!query) return;
+
+    const results = searchableItems.filter(item =>
+      item.title.toLowerCase().includes(query) ||
+      item.keywords.toLowerCase().includes(query)
+    ).slice(0, 6); // limit to top 6
+
+    results.forEach(item => {
+      const div = document.createElement("div");
+      div.textContent = `${item.title} (${item.type})`;
+      div.onclick = () => window.location.href = item.url;
+      suggestionBox.appendChild(div);
+    });
+
+    suggestionBox.style.display = results.length > 0 ? "block" : "none";
+  });
+
+  document.addEventListener("click", e => {
+    if (!searchBox.contains(e.target)) {
+      suggestionBox.innerHTML = "";
+    }
   });
 </script>
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Clubs | LoopIn</title>
   <style>
     body {
@@ -9,21 +9,76 @@
       font-family: sans-serif;
       background-color: #FAFAFA;
     }
+
     .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: #ffffff;
-      padding: 15px 30px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
       position: sticky;
       top: 0;
       z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 30px;
+      background-color: #ffffff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .logo img {
+      height: 32px;
+      margin-right: 8px;
+    }
+
+    .logo span {
+      font-weight: bold;
+      font-size: 20px;
+      color: #3366FF;
+    }
+
+    .navbar-center {
+      flex: 1;
+      text-align: center;
+    }
+
     .navbar h1 {
       margin: 0;
       font-size: 24px;
+      color: #222;
     }
+
+    .filter-toggle {
+      background-color: #3366FF;
+      color: white;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .filter-panel {
+      display: none;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      max-width: 960px;
+      margin: 10px auto;
+      border-radius: 12px;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .filter-panel select {
+      padding: 10px;
+      font-size: 14px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      min-width: 200px;
+    }
+
     .club-container {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -32,6 +87,7 @@
       max-width: 1200px;
       margin: 0 auto;
     }
+
     .club-card {
       background-color: white;
       border-radius: 12px;
@@ -40,15 +96,18 @@
       text-align: center;
       transition: transform 0.2s;
     }
+
     .club-card:hover {
       transform: translateY(-5px);
     }
+
     .club-card img {
       width: 100%;
       height: auto;
       border-radius: 8px;
       margin-bottom: 10px;
     }
+
     .club-card h3 {
       margin: 0;
       font-size: 16px;
@@ -56,37 +115,100 @@
   </style>
 </head>
 <body>
+
+  <!-- Navbar -->
   <div class="navbar">
-    <h1>Clubs</h1>
+    <div class="logo" onclick="window.location.href='../../index.html'">
+      <img src="ddddd.png" alt="LoopIn Logo" />
+      <span>LoopIn</span>
+    </div>
+    <div class="navbar-center">
+      <h1>Clubs</h1>
+    </div>
+    <button class="filter-toggle" onclick="toggleFilter()">Filter</button>
   </div>
 
+  <!-- Filter Panel -->
+  <div class="filter-panel" id="filter-panel">
+    <select id="region-select" onchange="updateUniversities()">
+      <option value="">All Regions</option>
+      <option value="Sylhet">Sylhet</option>
+      <option value="Dhaka">Dhaka</option>
+      <option value="Rajshahi">Rajshahi</option>
+    </select>
+
+    <select id="university-select">
+      <option value="">All Universities</option>
+    </select>
+
+    <select id="club-type-select">
+      <option value="">All Club Types</option>
+      <option>Science</option>
+      <option>Debating</option>
+      <option>Photography</option>
+      <option>Programming</option>
+      <option>Drama</option>
+      <option>Math</option>
+      <option>Physics</option>
+      <option>Literature</option>
+      <option>Finance</option>
+      <option>Career</option>
+    </select>
+  </div>
+
+  <!-- Clubs -->
   <div class="club-container">
-    <!-- Club Cards Start -->
-    <!-- Auto-generated below -->
-     <div class="club-card"><img src="https://via.placeholder.com/150?text=SUST+Science" alt="SUST Science Arena"><h3>SUST Science Arena</h3></div>
-<div class="club-card"><img src="https://via.placeholder.com/150?text=SUST+CSE" alt="SUST CSE Society"><h3>SUST CSE Society</h3></div>
-<div class="club-card"><img src="https://via.placeholder.com/150?text=SUST+Debating" alt="SUST Debating Society"><h3>SUST Debating Society</h3></div>
-<div class="club-card"><img src="https://via.placeholder.com/150?text=SUST+Robotics" alt="SUST Robotics Club"><h3>SUST Robotics Club</h3></div>
-<div class="club-card"><img src="https://via.placeholder.com/150?text=SUST+Photography" alt="SUST Photography Society"><h3>SUST Photography Society</h3></div>
-<div class="club-card"><img src="https://via.placeholder.com/150?text=SUST+Literature" alt="SUST Literature Club"><h3>SUST Literature Club</h3></div>
-<div class="club-card"><img src="https://via.placeholder.com/150?text=SUST+Career" alt="SUST Career Club"><h3>SUST Career Club</h3></div>
-<div class="club-card"><img src="https://via.placeholder.com/150?text=SUST+Math" alt="SUST Math Society"><h3>SUST Math Society</h3></div>
-<div class="club-card"><img src="https://via.placeholder.com/150?text=SUST+Physics" alt="SUST Physics Society"><h3>SUST Physics Society</h3></div>
-<div class="club-card"><img src="https://via.placeholder.com/150?text=SUST+English" alt="SUST English Club"><h3>SUST English Club</h3></div>
-<div class="club-card"><img src="https://via.placeholder.com/150?text=SUST+Engineering" alt="SUST Engineering Society"><h3>SUST Engineering Society</h3></div>
-<div class="club-card"><img src="https://via.placeholder.com/150?text=SUST+ACM" alt="SUST ACM Chapter"><h3>SUST ACM Chapter</h3></div>
-<div class="club-card"><img src="https://via.placeholder.com/150?text=SUST+Programming" alt="SUST Programming Club"><h3>SUST Programming Club</h3></div>
-<div class="club-card"><img src="https://via.placeholder.com/150?text=SUST+Chemistry" alt="SUST Chemistry Society"><h3>SUST Chemistry Society</h3></div>
-<div class="club-card"><img src="https://via.placeholder.com/150?text=SUST+Quizzing" alt="SUST Quizzing Club"><h3>SUST Quizzing Club</h3></div>
-<div class="club-card"><img src="https://via.placeholder.com/150?text=SUST+Cultural" alt="SUST Cultural Club"><h3>SUST Cultural Club</h3></div>
-<div class="club-card"><img src="https://via.placeholder.com/150?text=SUST+Cine" alt="SUST Cine & Drama Club"><h3>SUST Cine & Drama Club</h3></div>
-<div class="club-card"><img src="https://via.placeholder.com/150?text=SUST+Finance" alt="SUST Finance Society"><h3>SUST Finance Society</h3></div>
-<div class="club-card"><img src="https://via.placeholder.com/150?text=SUST+Economics" alt="SUST Economics Society"><h3>SUST Economics Society</h3></div>
-<div class="club-card"><img src="https://via.placeholder.com/150?text=SUST+Environmental" alt="SUST Environmental Club"><h3>SUST Environmental Club</h3></div>
-<!-- ... and so on until 47 cards (let me know if you want the rest pasted too) -->
-
-    <!-- PASTE FROM NEXT BLOCK -->
-    <!-- Club Cards End -->
+    <div class="club-card"><img src="470217063_982766717218721_4917922370747596217_n.jpg" alt="SUST Science Arena"><h3>SUST Science Arena</h3></div>
+    <div class="club-card"><img src="347784508_941737900475210_6835483760570241339_n.png" alt="SUST CSE Society"><h3>SUST CSE Society</h3></div>
+    <div class="club-card"><img src="488854507_968898498775702_1780174745282090031_n.jpg" alt="SUST Debating Society"><h3>SUST Debating Society</h3></div>
+    <div class="club-card"><img src="348549352_3492287274360369_3983548727684270565_n.jpg" alt="Robo SUST"><h3>Robo SUST</h3></div>
+    <div class="club-card"><img src="488446529_1172435644893664_8819397159605563925_n.jpg" alt="SUST Photography Society"><h3>SUST Photography Association</h3></div>
+    <div class="club-card"><img src="427886707_800657882104630_267104525359734327_n.jpg" alt="SUST Career Club"><h3>SUST Career Club</h3></div>
+    <!-- Add more as needed -->
   </div>
+
+  <!-- Scripts -->
+  <script>
+    function toggleFilter() {
+      const panel = document.getElementById('filter-panel');
+      panel.style.display = panel.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    const universities = {
+      Sylhet: ['SUST', 'Leading University', 'Metropolitan University'],
+      Dhaka: ['BUET', 'DU', 'NSU', 'AIUB' , 'BRAC', 'JU', 'JnU', 'BUTEX', 'IUB', 'Aro koto lage bhai !?'],
+      Rajshahi: ['RU', 'Rajshahi Science & Technology']
+    };
+
+    function updateUniversities() {
+      const region = document.getElementById("region-select").value;
+      const uniSelect = document.getElementById("university-select");
+      uniSelect.innerHTML = '';
+
+      let all = [];
+      if (region && universities[region]) {
+        all = universities[region];
+      } else {
+        // combine all regions
+        all = Object.values(universities).flat();
+        all.sort();
+      }
+
+      const defaultOption = document.createElement("option");
+      defaultOption.text = "All Universities";
+      defaultOption.value = "";
+      uniSelect.appendChild(defaultOption);
+
+      all.forEach(uni => {
+        const opt = document.createElement("option");
+        opt.value = uni;
+        opt.text = uni;
+        uniSelect.appendChild(opt);
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', updateUniversities);
+  </script>
+
 </body>
 </html>
