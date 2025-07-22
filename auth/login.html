@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Login - LoopIn</title>
   <style>
     body {
@@ -21,6 +21,7 @@
       box-shadow: 0 4px 16px rgba(0,0,0,0.1);
       width: 100%;
       max-width: 400px;
+      position: relative;
     }
 
     .login-container h2 {
@@ -78,60 +79,154 @@
     .login-footer a:hover {
       text-decoration: underline;
     }
+
     #loading-screen {
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  background-color: #fdfcf8;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  transition: opacity 0.6s ease;
+      position: fixed;
+      width: 100vw;
+      height: 100vh;
+      background-color: #fdfcf8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.6s ease;
+    }
+
+    .loading-logo {
+      width: 100px;
+      animation: pulse 1.5s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.15); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.9; }
+    }
+
+    .error-message {
+      color: red;
+      font-size: 14px;
+      margin-bottom: 10px;
+      display: none;
+      text-align: center;
+    }
+
+   
+
+    .highlight {
+      color: #FF3B30;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .forgot-password {
+  font-size: 13px;
+  margin-top: 6px; /* was -10px, now increased for space */
+  text-align: right;
+  margin-bottom: 16px;
+  color: #666;
+   cursor: pointer;
+  
+  transition: all 0.2s ease;
 }
 
-.loading-logo {
-  width: 100px;
-  animation: pulse 1.5s infinite ease-in-out;
+.forgot-password:hover {
+  text-decoration: underline;
+  color: #3366FF;
+}
+.password-wrapper {
+  position: relative;
 }
 
-@keyframes pulse {
-  0% { transform: scale(1); opacity: 0.9; }
-  50% { transform: scale(1.15); opacity: 1; }
-  100% { transform: scale(1); opacity: 0.9; }
+.password-wrapper input {
+  width: 100%;
+  padding-right: 40px;
+  box-sizing: border-box;
+}
+
+.eye-icon {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.eye-icon:hover {
+  opacity: 1;
 }
 
   </style>
 </head>
 <body>
-    <div id="loading-screen">
-  <img src="ddddd.png" alt="LoopIn Logo" class="loading-logo">
-</div>
+  <div id="loading-screen">
+    <img src="ddddd.png" alt="LoopIn Logo" class="loading-logo">
+  </div>
 
   <div class="login-container">
     <h2>Log In to LoopIn</h2>
-    <form>
+    <div class="error-message" id="error-msg">Invalid email or password.</div>
+    <form id="login-form">
       <div class="form-group">
         <label for="email">Email or Username</label>
         <input type="text" id="email" placeholder="Enter your email or username" required>
       </div>
       <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" placeholder="Enter your password" required>
+        <div class="form-group password-group">
+  <label for="password">Password</label>
+  <div class="password-wrapper">
+    <input type="password" id="password" placeholder="Enter your password" required>
+    <img src="<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"  alt="Toggle visibility" id="togglePassword" class="eye-icon">
+  </div>
+</div>
+
+      
+        <div class="forgot-password"><span id="forgot" class="">Forgot password?</span></div>
       </div>
-      <button class="login-btn" type="submit">Log In</button>
+<button class="login-btn" type="submit">Log In</button>
+
     </form>
     <div class="login-footer">
       Don't have an account? <a href="#">Sign up</a>
     </div>
   </div>
+
   <script>
-  window.addEventListener("load", () => {
-    const loader = document.getElementById("loading-screen");
-    loader.style.opacity = "0";
-    setTimeout(() => {
-      loader.style.display = "none";
-    }, 600); // Match transition time
+    window.addEventListener("load", () => {
+      const loader = document.getElementById("loading-screen");
+      loader.style.opacity = "0";
+      setTimeout(() => {
+        loader.style.display = "none";
+      }, 600);
+    });
+
+    document.getElementById("login-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const error = document.getElementById("error-msg");
+      const forgot = document.getElementById("forgot");
+
+    if (email === "abc@gmail.com" && password === "1234567") {
+  window.location.href = "auth/profile.html";
+}
+ else {
+        error.style.display = "block";
+        forgot.classList.add("highlight");
+      }
+    });
+  </script>
+  <script>
+  const togglePassword = document.getElementById('togglePassword');
+  const passwordInput = document.getElementById('password');
+
+  togglePassword.addEventListener('click', () => {
+    const type = passwordInput.type === 'password' ? 'text' : 'password';
+    passwordInput.type = type;
+    togglePassword.src = type === 'password' ? 'eye.svg' : 'eye-off.svg'; // update icon if needed
   });
 </script>
 
