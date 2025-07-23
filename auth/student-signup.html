@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Sign Up - LoopIn</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #fdfcf8;
+      padding: 20px;
+      margin: 0;
+    }
+
+    .form-container {
+      max-width: 600px;
+      margin: auto;
+      background-color: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #007BFF;
+      border: 2px solid #007BFF;
+      padding: 12px;
+      border-radius: 16px;
+      background-color: #f0f8ff;
+    }
+
+    .floating-label {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .floating-label input {
+      width: 100%;
+      padding: 12px 10px 12px 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    .floating-label label {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: white;
+      padding: 0 4px;
+      color: #aaa;
+      transition: all 0.2s ease;
+      pointer-events: none;
+    }
+
+    .floating-label input:focus + label,
+    .floating-label input:not(:placeholder-shown) + label {
+      top: -10px;
+      left: 8px;
+      font-size: 12px;
+      color: #007BFF;
+    }
+
+    .phone-container {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-top: 10px;
+      margin-bottom: 30px;
+    }
+
+    .phone-container select {
+      width: 90px;
+      padding: 10px;
+      border-radius: 6px;
+    }
+
+    .phone-container input {
+      padding: 12px;
+      flex: 1;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    label {
+      font-weight: 500;
+    }
+
+    .interest-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 50px;
+      margin-bottom: 20px;
+    }
+
+    .interest-box {
+      padding: 10px 15px;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      user-select: none;
+    }
+
+    .interest-box.selected {
+      background-color: #e6f0ff;
+      border-color: #007BFF;
+    }
+
+    .confirm-section {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .confirm-section p {
+      color: red;
+      font-weight: 400;
+      font-size: 14px;
+    }
+
+    .create-btn {
+      background-color: #007BFF;
+      color: white;
+      padding: 14px 30px;
+      border: none;
+      border-radius: 22px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .create-btn:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Create Your Student Account</h2>
+
+    <div class="floating-label">
+      <input type="text" id="name" placeholder=" " required>
+      <label for="name">Full Name (NID/Birth Certificate)</label>
+    </div>
+
+    <div class="floating-label">
+      <input type="text" id="university" placeholder=" " required>
+      <label for="university">University</label>
+    </div>
+
+    <div class="floating-label">
+      <input type="text" id="department" placeholder=" " required>
+      <label for="department">Department</label>
+    </div>
+
+    <div class="floating-label">
+      <input type="text" id="session" placeholder=" " required>
+      <label for="session">Session</label>
+    </div>
+
+    <div class="floating-label">
+      <input type="date" id="birthday" placeholder=" " required>
+      <label for="birthday">Birthday</label>
+    </div>
+
+    <label for="phone">Phone Number</label>
+    <div class="phone-container">
+      <select id="country-code">
+        <option value="+880">+880 (BD)</option>
+        <option value="+91">+91 (IN)</option>
+        <option value="+1">+1 (US)</option>
+      </select>
+      <input type="text" id="phone" placeholder="1XXXXXXXXX" required>
+    </div>
+
+    <label>Choose Your Interests</label>
+    <div class="interest-container" id="interests">
+      <div class="interest-box">Physics</div>
+      <div class="interest-box">Chemistry</div>
+      <div class="interest-box">Art</div>
+      <div class="interest-box">Photography</div>
+      <div class="interest-box">Biology</div>
+      <div class="interest-box">Astronomy</div>
+      <div class="interest-box">Machine Learning</div>
+      <div class="interest-box">Robotics</div>
+      <div class="interest-box">Gaming</div>
+      <div class="interest-box">Design</div>
+      <div class="interest-box">Music</div>
+    </div>
+
+    <div class="confirm-section">
+      <p>Check everything is correct before creating your account.</p>
+      <button class="create-btn" id="create-account">Create Account →</button>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.interest-box').forEach(box => {
+      box.addEventListener('click', () => {
+        box.classList.toggle('selected');
+      });
+    });
+
+    const phoneInput = document.getElementById('phone');
+    const createBtn = document.getElementById('create-account');
+
+    createBtn.addEventListener('click', () => {
+      const name = document.getElementById('name').value.trim();
+      const university = document.getElementById('university').value.trim();
+      const department = document.getElementById('department').value.trim();
+      const session = document.getElementById('session').value.trim();
+      const birthday = document.getElementById('birthday').value;
+      const phone = phoneInput.value.trim();
+      const selectedInterests = document.querySelectorAll('.interest-box.selected');
+
+      const errors = [];
+
+      if (!name || !university || !department || !session || !birthday || !phone) {
+        errors.push("Please fill in all fields.");
+      }
+      if (!/^1\d{9}$/.test(phone)) {
+        errors.push("Phone number must start with 1 and be 10 digits (BD format).")
+      }
+      if (selectedInterests.length === 0) {
+        errors.push("Select at least one interest.");
+      }
+
+      if (errors.length > 0) {
+        alert(errors.join('\n'));
+      } else {
+        alert("Account created successfully!");
+        // Backend integration placeholder
+      }
+    });
+  </script>
+</body>
+</html>
