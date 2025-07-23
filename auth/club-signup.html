@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Organizer Sign Up - LoopIn</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #fdfcf8;
+      padding: 20px;
+      margin: 0;
+    }
+
+    .form-container {
+      max-width: 600px;
+      margin: auto;
+      background-color: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #007bff;
+      border: 2px solid #007bff;
+      padding: 10px;
+      border-radius: 12px;
+      background-color: #e6f0ff;
+    }
+
+    .floating-label {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .floating-label input,
+    .floating-label select {
+      width: 100%;
+      padding: 12px 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      background-color: white;
+      transition: all 0.3s ease;
+    }
+
+    .floating-label label {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: white;
+      padding: 0 4px;
+      color: #aaa;
+      transition: all 0.2s ease;
+      pointer-events: none;
+    }
+
+    .floating-label input:focus + label,
+    .floating-label input:not(:placeholder-shown) + label,
+    .floating-label select:focus + label,
+    .floating-label select:not([value=""]) + label {
+      top: -10px;
+      left: 8px;
+      font-size: 12px;
+      color: #007bff;
+    }
+
+    label {
+      font-weight: 500;
+    }
+
+    .confirm-section {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .confirm-section p {
+      color: red;
+      font-weight: 300;
+      font-size: 12px;
+      font-style: italic;
+    }
+
+    .create-btn {
+      background-color: #007bff;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 20px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .create-btn:hover {
+      background-color: #0b53a0;
+    }
+
+    .phone-input {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .phone-input select {
+      width: 80px;
+    }
+
+    input[type="file"] {
+      padding: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Create Your Club Account</h2>
+
+    <div class="floating-label">
+      <input type="text" id="club-name" placeholder=" " required>
+      <label for="club-name">Club/Organization Name</label>
+    </div>
+
+    <div class="floating-label">
+      <input type="text" id="club-university" placeholder=" " required>
+      <label for="club-university">University</label>
+    </div>
+
+    <div class="floating-label">
+      <input type="date" id="creation-date" placeholder=" " required>
+      <label for="creation-date">Date of Establishment</label>
+    </div>
+
+    <div class="floating-label">
+      <input type="file" id="approval-doc" accept=".pdf,image/*" required>
+      <label for="approval-doc">Authorization Certificate (PDF/Image, max 10MB)</label>
+    </div>
+
+    <div class="floating-label">
+      <input type="text" id="president-name" placeholder=" " required>
+      <label for="president-name">President Name</label>
+    </div>
+
+    <div class="floating-label phone-input">
+      <select id="president-phone-code">
+        <option value="+880">+880</option>
+      </select>
+      <input type="tel" id="president-phone" placeholder=" " required>
+    </div>
+    <div class="floating-label">
+      <label for="president-phone">President Phone Number</label>
+    </div>
+
+    <div class="floating-label">
+      <input type="text" id="vp-name" placeholder=" " required>
+      <label for="vp-name">Vice President Name</label>
+    </div>
+
+    <div class="floating-label phone-input">
+      <select id="vp-phone-code">
+        <option value="+880">+880</option>
+      </select>
+      <input type="tel" id="vp-phone" placeholder=" " required>
+    </div>
+    <div class="floating-label">
+      <label for="vp-phone">Vice President Phone Number</label>
+    </div>
+
+    <div class="floating-label phone-input">
+      <select id="official-phone-code">
+        <option value="+880">+880</option>
+      </select>
+      <input type="tel" id="official-phone" placeholder=" " required>
+    </div>
+    <div class="floating-label">
+      <label for="official-phone">Official Phone Number</label>
+    </div>
+
+    <div class="floating-label">
+      <select id="club-field" required>
+        <option value="" disabled selected hidden></option>
+        <option value="Science">Science</option>
+        <option value="Cultural">Cultural</option>
+        <option value="IT">IT</option>
+        <option value="Photography">Photography</option>
+        <option value="Debating">Debating</option>
+        <option value="Business">Business</option>
+        <option value="Sports">Sports</option>
+      </select>
+      <label for="club-field">Select Field</label>
+    </div>
+
+    <div class="confirm-section">
+      <p>Check everything is correct before creating your account.</p>
+      <button class="create-btn" id="create-account">Create Account →</button>
+    </div>
+  </div>
+
+  <script>
+    const createBtn = document.getElementById('create-account');
+
+    createBtn.addEventListener('click', () => {
+      const requiredFields = [
+        'club-name', 'club-university', 'creation-date', 'approval-doc',
+        'president-name', 'president-phone', 'vp-name', 'vp-phone', 'official-phone', 'club-field'
+      ];
+
+      const errors = [];
+
+      requiredFields.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el || !el.value.trim()) {
+          errors.push(`Please fill in the ${id.replace(/-/g, ' ')} field.`);
+        }
+      });
+
+      if (errors.length > 0) {
+        alert(errors.join('\n'));
+      } else {
+        alert("Club account created successfully!");
+        // Backend integration here
+      }
+    });
+  </script>
+</body>
+</html>

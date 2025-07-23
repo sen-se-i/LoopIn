@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -96,8 +95,8 @@
     <div class="signup-box">
       <img src="../ddddd.png" alt="LoopIn Logo">
       <h2>Sign Up</h2>
-      <form>
-        <input type="email" placeholder="Enter your email" required />
+      <form id="signup-form">
+        <input type="email" id="email" placeholder="Enter your email" required />
         <button type="submit">Submit</button>
       </form>
     </div>
@@ -110,6 +109,33 @@
       setTimeout(() => {
         loader.style.display = "none";
       }, 600);
+    });
+
+    // Submit email to backend
+    document.getElementById("signup-form").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+
+      try {
+        const response = await fetch("http://localhost:3000/send-code", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ email })
+        });
+
+        if (response.ok) {
+          // Redirect to roles.html after email sent
+          window.location.href = "class-role.html";
+        } else {
+          const error = await response.text();
+          alert("Failed: " + error);
+        }
+      } catch (err) {
+        alert("Error connecting to server.");
+        console.error(err);
+      }
     });
   </script>
 </body>
