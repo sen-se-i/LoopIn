@@ -1,25 +1,17 @@
 {
-  "name": "loopin-backend",
+  "name": "loopin-server",
   "version": "1.0.0",
-  "description": "LoopIn email verification backend server",
   "main": "server.js",
   "scripts": {
+    "dev": "node server.js",
     "start": "node server.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/sen-se-i/LoopIn.git"
-  },
-  "author": "Fahim",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/sen-se-i/LoopIn/issues"
-  },
-  "homepage": "https://github.com/sen-se-i/LoopIn#readme",
   "dependencies": {
-    "body-parser": "^1.20.2",
+    "body-parser": "^2.2.0",
     "cors": "^2.8.5",
-    "express": "^4.18.2",
-    "nodemailer": "^6.9.4"
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "mongodb": "^6.18.0",
+    "nodemailer": "^6.10.1"
   }
 }
