@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Verify Email - LoopIn</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background-color: #FAFAFA;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .verify-box {
+      background-color: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      text-align: center;
+      max-width: 360px;
+      width: 100%;
+    }
+
+    .verify-box h2 {
+      margin-bottom: 20px;
+      color: #3366FF;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    button {
+      background-color: #3366FF;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #264ecf;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="verify-box">
+      <h2>Enter Verification Code</h2>
+      <form id="verify-form">
+        <input type="text" id="code" placeholder="6-digit code" required />
+        <button type="submit">Verify</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("verify-form").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const code = document.getElementById("code").value.trim();
+      const email = localStorage.getItem("signupEmail");
+
+      if (!email) {
+        alert("No email found. Please go back and sign up again.");
+        return;
+      }
+
+      try {
+        const response = await fetch("http://localhost:3000/verify-code", {
+          
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ email, code })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          alert("✅ Verified successfully!");
+          localStorage.removeItem("signupEmail");
+          // Redirect to next page (e.g., roles.html)
+          window.location.href = "roles.html";
+        } else {
+          alert("❌ " + result.message);
+        }
+      } catch (err) {
+        alert("Error connecting to server.");
+        console.error(err);
+      }
+    });
+  </script>
+</body>
+</html>
