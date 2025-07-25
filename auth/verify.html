@@ -63,7 +63,7 @@
     <div class="verify-box">
       <h2>Enter Verification Code</h2>
       <form id="verify-form">
-        <input type="text" id="code" placeholder="6-digit code" required />
+        <input type="text" id="code" placeholder="6-digit code" maxlength="6" required />
         <button type="submit">Verify</button>
       </form>
     </div>
@@ -77,13 +77,14 @@
       const email = localStorage.getItem("signupEmail");
 
       if (!email) {
-        alert("No email found. Please go back and sign up again.");
+        alert("❌ No email found. Please sign up again.");
+        window.location.href = "signup.html"; // fallback
         return;
       }
 
       try {
-        const response = await fetch("http://localhost:3000/verify-code", {
-          
+        const response = await fetch("http://127.0.0.1:3000/verify-code", {
+
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -91,18 +92,19 @@
           body: JSON.stringify({ email, code })
         });
 
-        const result = await response.json();
+       const text = await response.text();
 
-        if (response.ok) {
-          alert("✅ Verified successfully!");
-          localStorage.removeItem("signupEmail");
-          // Redirect to next page (e.g., roles.html)
-          window.location.href = "roles.html";
-        } else {
-          alert("❌ " + result.message);
-        }
+if (response.ok) {
+  alert("✅ Verified successfully!");
+  localStorage.removeItem("signupEmail");
+  window.location.href = "class-role.html";
+} else {
+  alert("❌ " + text);
+}
+
+
       } catch (err) {
-        alert("Error connecting to server.");
+        alert("🚫 Error connecting to server. Please make sure your server is running.");
         console.error(err);
       }
     });
