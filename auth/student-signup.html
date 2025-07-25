@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Student Sign Up - LoopIn</title>
   <style>
+    /* Same styling as before — unchanged */
     body {
       font-family: sans-serif;
       background-color: #fdfcf8;
@@ -38,7 +39,7 @@
 
     .floating-label input {
       width: 100%;
-      padding: 12px 10px 12px 10px;
+      padding: 12px 10px;
       border-radius: 6px;
       border: 1px solid #ccc;
       font-size: 16px;
@@ -92,7 +93,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      margin-top: 50px;
+      margin-top: 30px;
       margin-bottom: 20px;
     }
 
@@ -176,6 +177,16 @@
       <input type="text" id="phone" placeholder="1XXXXXXXXX" required>
     </div>
 
+    <!-- 🔐 Password Fields -->
+    <div class="floating-label">
+      <input type="password" id="password" placeholder=" " required>
+      <label for="password">Password (min 6 chars, 1 number)</label>
+    </div>
+    <div class="floating-label">
+      <input type="password" id="confirm-password" placeholder=" " required>
+      <label for="confirm-password">Confirm Password</label>
+    </div>
+
     <label>Choose Your Interests</label>
     <div class="interest-container" id="interests">
       <div class="interest-box">Physics</div>
@@ -204,36 +215,78 @@
       });
     });
 
-    const phoneInput = document.getElementById('phone');
-    const createBtn = document.getElementById('create-account');
-
-    createBtn.addEventListener('click', () => {
+    document.getElementById('create-account').addEventListener('click', async () => {
       const name = document.getElementById('name').value.trim();
       const university = document.getElementById('university').value.trim();
       const department = document.getElementById('department').value.trim();
       const session = document.getElementById('session').value.trim();
       const birthday = document.getElementById('birthday').value;
-      const phone = phoneInput.value.trim();
-      const selectedInterests = document.querySelectorAll('.interest-box.selected');
+      const phone = document.getElementById('phone').value.trim();
+      const countryCode = document.getElementById('country-code').value;
+      const password = document.getElementById('password').value.trim();
+      const confirmPassword = document.getElementById('confirm-password').value.trim();
+      const interests = Array.from(document.querySelectorAll('.interest-box.selected')).map(el => el.textContent);
 
       const errors = [];
 
-      if (!name || !university || !department || !session || !birthday || !phone) {
+      if (!name || !university || !department || !session || !birthday || !phone || !password || !confirmPassword) {
         errors.push("Please fill in all fields.");
       }
+
       if (!/^1\d{9}$/.test(phone)) {
-        errors.push("Phone number must start with 1 and be 10 digits (BD format).")
+        errors.push("Phone number must start with 1 and be 10 digits (BD format).");
       }
-      if (selectedInterests.length === 0) {
+
+      if (password.length < 6 || !/\d/.test(password)) {
+        errors.push("Password must be at least 6 characters long and contain a number.");
+      }
+
+      if (password !== confirmPassword) {
+        errors.push("Passwords do not match.");
+      }
+
+      if (interests.length === 0) {
         errors.push("Select at least one interest.");
       }
 
       if (errors.length > 0) {
         alert(errors.join('\n'));
-      } else {
-        alert("Account created successfully!");
-        // Backend integration placeholder
+        return;
       }
+
+      // ✅ Send to backend
+     try {
+  const res = await fetch('https://loopin-1.onrender.com/signup', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      name,
+      university,
+      department,
+      session,
+      birthday,
+      phone: countryCode + phone,
+      password,
+      interests,
+    }),
+  });
+
+  const data = await res.json();
+
+  if (res.ok) {
+    alert("🎉 Account created successfully!");
+    localStorage.setItem('token', data.token); // store token
+    window.location.href = '/profile.html';    // redirect to profile page
+  } else {
+    alert("❌ Error: " + data.message);
+  }
+} catch (err) {
+  alert("⚠️ Something went wrong connecting to the server.");
+  console.error(err);
+}
+
     });
   </script>
 </body>
