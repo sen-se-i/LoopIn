@@ -1,26 +1,29 @@
 const nodemailer = require('nodemailer');
 
-// Temporary store (should use DB in production)
-const codes = {};
-
 function generate6DigitCode() {
-  return Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit code
+  return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
-function sendVerificationEmail(userEmail) {
+async function sendVerificationEmail(db, userEmail) {
   const code = generate6DigitCode();
-  codes[userEmail] = code; // Store code mapped to email
+
+  // Insert into MongoDB with timestamp
+  await db.collection("verifications").insertOne({
+    email: userEmail,
+    code,
+    createdAt: new Date()
+  });
 
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
       user: 'mymirrordimension@gmail.com',
-      pass: 'vflb lhuc gclj hnht', // Use Gmail App Password
-    },
+      pass: 'vflb lhuc gclj hnht' // no spaces
+    }
   });
 
   const mailOptions = {
-    from: 'LoopIn <your_email@gmail.com>',
+    from: 'LoopIn <mymirrordimension@gmail.com>',
     to: userEmail,
     subject: 'Your LoopIn Verification Code',
     html: `
@@ -28,18 +31,13 @@ function sendVerificationEmail(userEmail) {
       <p>Your verification code is:</p>
       <h2 style="color:#1a73e8">${code}</h2>
       <p>This code will expire in 5 minutes.</p>
-    `,
+    `
   };
 
-  transporter.sendMail(mailOptions, (err, info) => {
-    if (err) {
-      console.error('Email send error:', err);
-    } else {
-      console.log('Verification code sent to:', userEmail);
-    }
-  });
+  await transporter.sendMail(mailOptions);
+  console.log("✅ Verification code sent to:", userEmail);
 
   return code;
 }
 
-module.exports = { sendVerificationEmail, codes };
+module.exports = { sendVerificationEmail };
