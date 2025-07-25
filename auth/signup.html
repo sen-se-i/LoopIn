@@ -126,8 +126,8 @@
         });
 
         if (response.ok) {
-          // Redirect to roles.html after email sent
-          window.location.href = "class-role.html";
+          localStorage.setItem("signupEmail", email); // store email
+          window.location.href = "verify.html"; // go to verify page
         } else {
           const error = await response.text();
           alert("Failed: " + error);
