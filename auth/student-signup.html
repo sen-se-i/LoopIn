@@ -256,37 +256,40 @@
 
       // ✅ Send to backend
      try {
-  const res = await fetch('https://loopin-1.onrender.com/signup', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      name,
-      university,
-      department,
-      session,
-      birthday,
-      phone: countryCode + phone,
-      password,
-      interests,
-    }),
+  const formData = {
+    name,
+    university,
+    department,
+    session,
+    birthday,
+    phone: countryCode + phone,
+    password,
+    interests,
+  };
+
+  fetch("https://loopin-1.onrender.com/signup", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(formData)
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.token) {
+      localStorage.setItem("token", data.token); // save token
+      window.location.href = "/pages/profile/profile.html"; // redirect
+    } else {
+      alert(data.message || "Signup failed.");
+    }
+  })
+  .catch(err => {
+    alert("⚠️ Something went wrong connecting to the server.");
+    console.error(err);
   });
 
-  const data = await res.json();
-
-  if (res.ok) {
-    alert("🎉 Account created successfully!");
-    localStorage.setItem('token', data.token); // store token
-    window.location.href = '/profile.html';    // redirect to profile page
-  } else {
-    alert("❌ Error: " + data.message);
-  }
 } catch (err) {
-  alert("⚠️ Something went wrong connecting to the server.");
+  alert("⚠️ Something went wrong.");
   console.error(err);
 }
-
     });
   </script>
 </body>
