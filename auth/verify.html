@@ -93,12 +93,13 @@
         });
 
        const text = await response.text();
-
 if (response.ok) {
   alert("✅ Verified successfully!");
+  localStorage.setItem("verifiedEmail", email); // ✅ THIS IS THE FIX
   localStorage.removeItem("signupEmail");
-  window.location.href = "class-role.html";
-} else {
+  window.location.href = "class-role.html"; // or student-signup.html if that's next
+}
+else {
   alert("❌ " + text);
 }
 

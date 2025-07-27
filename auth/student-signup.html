@@ -209,6 +209,12 @@
   </div>
 
   <script>
+    const email = localStorage.getItem("verifiedEmail");
+if (!email) {
+  alert("⚠️ Email verification required.");
+  window.location.href = "signup.html";
+}
+
     document.querySelectorAll('.interest-box').forEach(box => {
       box.addEventListener('click', () => {
         box.classList.toggle('selected');
@@ -265,6 +271,7 @@
     phone: countryCode + phone,
     password,
     interests,
+    email
   };
 
   fetch("https://loopin-1.onrender.com/signup", {
@@ -276,7 +283,9 @@
   .then(data => {
     if (data.token) {
       localStorage.setItem("token", data.token); // save token
-      window.location.href = "/pages/profile/profile.html"; // redirect
+      localStorage.setItem("verifiedEmail", email);
+window.location.href = "profile.html";
+
     } else {
       alert(data.message || "Signup failed.");
     }
