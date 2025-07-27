@@ -133,7 +133,11 @@ app.post('/signup', async (req, res) => {
 
 // ✅ Profile Route (requires token)
 app.get('/profile', async (req, res) => {
-  const token = req.headers.authorization;
+  const authHeader = req.headers.authorization;
+  if (!authHeader) return res.status(401).send("❌ Unauthorized");
+
+  // Remove "Bearer " prefix
+  const token = authHeader.split(' ')[1];
   if (!token) return res.status(401).send("❌ Unauthorized");
 
   try {
@@ -142,22 +146,26 @@ app.get('/profile', async (req, res) => {
 
     if (!user) return res.status(404).send("❌ User not found");
 
-    res.json({
-      name: user.name,
-      email: user.email,
-      department: user.department,
-      university: user.university,
-      session: user.session,
-      birthday: user.birthday,
-      phone: user.phone,
-      interests: user.interests
-    });
+   res.json({
+  student: {
+    name: user.name,
+    email: user.email,
+    department: user.department,
+    university: user.university,
+    session: user.session,
+    birthday: user.birthday,
+    phone: user.phone,
+    interests: user.interests
+  }
+});
+
 
   } catch (err) {
     console.error("❌ Token error:", err);
     res.status(401).send("❌ Invalid or expired token");
   }
 });
+
 
 // 🌐 Root & Ping Routes
 app.get('/', (req, res) => res.send("✅ LoopIn backend is running."));
