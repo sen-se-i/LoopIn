@@ -126,7 +126,12 @@ app.post('/signup', async (req, res) => {
 
     await newStudent.save();
 
-    const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: '7d' });
+  const token = jwt.sign(
+  { id: newStudent._id, email: newStudent.email },
+  JWT_SECRET,
+  { expiresIn: '7d' }
+);
+
     res.status(201).json({ message: '✅ Student account created.', token });
 
   } catch (err) {
@@ -144,10 +149,10 @@ app.get('/profile', async (req, res) => {
   if (!token) return res.status(401).send("❌ Unauthorized");
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-    const user = await Student.findOne({ email: decoded.email });
+   const decoded = jwt.verify(token, JWT_SECRET);
+const user = await Student.findById(decoded.id);
+if (!user) return res.status(404).send("❌ User not found");
 
-    if (!user) return res.status(404).send("❌ User not found");
 
     res.json({
       student: {
