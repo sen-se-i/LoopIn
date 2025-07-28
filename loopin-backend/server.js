@@ -200,6 +200,21 @@ app.get('/profile', async (req, res) => {
 });
 
 
+// editing profile
+app.put('/profile', authenticateToken, async (req, res) => {
+  try {
+    const email = req.user.email;
+    const updated = await Student.findOneAndUpdate(
+      { email },
+      { $set: req.body },
+      { new: true }
+    );
+    if (!updated) return res.status(404).json({ message: 'Student not found' });
+    res.json({ message: "Profile updated", student: updated });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 
 // 🌐 Serve profile.html directly
