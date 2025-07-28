@@ -135,32 +135,31 @@ app.post('/signup', async (req, res) => {
   }
 });
 
-// ✅ Login
-app.post('/login', async (req, res) => {
-  const { phone, password } = req.body;  // change from email to phone
 
-  if (!phone || !password) {
-    return res.status(400).json({ message: 'Phone and password are required.' }); // update error message too
-  }
+//loginroute
+app.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password)
+    return res.status(400).json({ message: "Email and password are required." });
 
   try {
-    const student = await Student.findOne({ phone });  // find by phone instead of email
+    const student = await Student.findOne({ email });
 
     if (!student) {
-      return res.status(404).json({ message: 'User not found.' });
+      return res.status(404).json({ message: "User not found." });
     }
 
     if (student.password !== password) {
-      return res.status(401).json({ message: 'Invalid password.' });
+      return res.status(401).json({ message: "Invalid password." });
     }
 
-    const token = jwt.sign({ phone: student.phone }, JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ email: student.email }, JWT_SECRET, { expiresIn: '7d' });
 
-    res.status(200).json({ message: '✅ Login successful.', token });
-
+    res.status(200).json({ message: "Login successful.", token });
   } catch (err) {
-    console.error("❌ Login error:", err);
-    res.status(500).json({ message: '❌ Internal server error.' });
+    console.error("Login error:", err);
+    res.status(500).json({ message: "Internal server error." });
   }
 });
 
