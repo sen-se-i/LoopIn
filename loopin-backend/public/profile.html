@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Personal Dashboard | LoopIn</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #FAFAFA;
+    }
+
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 30px;
+      background-color: #ffffff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .logo img {
+      height: 32px;
+      margin-right: 8px;
+    }
+
+    .logo span {
+      font-weight: bold;
+      font-size: 20px;
+      color: #3366FF;
+    }
+
+    .navbar h1 {
+      margin: 0;
+      font-size: 24px;
+      color: #222;
+    }
+
+    .menu-btn {
+      font-size: 22px;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+
+    .sidebar {
+      display: none;
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 250px;
+      height: 100%;
+      background-color: white;
+      box-shadow: -2px 0 6px rgba(0,0,0,0.1);
+      padding: 20px;
+      z-index: 2000;
+    }
+
+    .sidebar.active {
+      display: block;
+    }
+
+    .sidebar a {
+      display: block;
+      margin-bottom: 20px;
+      color: #333;
+      text-decoration: none;
+      font-size: 16px;
+    }
+
+    .profile-container {
+      max-width: 960px;
+      margin: 30px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .profile-header img {
+      height: 100px;
+      width: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #3366FF;
+    }
+
+    .profile-header h2 {
+      margin: 0;
+    }
+
+    .section {
+      margin-top: 30px;
+    }
+
+    .section h3 {
+      margin-bottom: 10px;
+      color: #3366FF;
+    }
+
+    .achievement, .competition {
+      padding: 12px;
+      background: #F0F4FF;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="logo" onclick="window.location.href='../../index.html'">
+      <img src="ddddd.png" alt="LoopIn Logo" />
+      <span>LoopIn</span>
+    </div>
+    <h1>Personal Dashboard</h1>
+    <button class="menu-btn" onclick="toggleSidebar()">
+      <i class="fas fa-bars"></i>
+    </button>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <a href="#">Edit Profile</a>
+    <a href="#">Settings</a>
+    <a href="#">Help Center</a>
+    <a href="#">Feedback</a>
+    <a href="#" onclick="logout()">Logout</a>
+  </div>
+
+  <!-- Profile Section -->
+  <div class="profile-container">
+    <div class="profile-header">
+      <img id="profile-image" src="https://via.placeholder.com/100" alt="Profile Picture" />
+      <div>
+        <h2 id="student-name">Loading...</h2>
+        <p id="student-interests">Fetching interests...</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>Profile Info</h3>
+      <p><strong>University:</strong> <span id="profile-university"></span></p>
+      <p><strong>Department:</strong> <span id="profile-department"></span></p>
+      <p><strong>Session:</strong> <span id="profile-session"></span></p>
+      <p><strong>Birthday:</strong> <span id="profile-birthday"></span></p>
+      <p><strong>Phone:</strong> <span id="profile-phone"></span></p>
+    </div>
+
+    <div class="section">
+      <h3>Achievements</h3>
+      <div class="achievement">🏅 National Physics Olympiad - 1st Place</div>
+      <div class="achievement">🏅 Inter-University Math Challenge - Top 10</div>
+    </div>
+
+    <div class="section">
+      <h3>Competitions Participated</h3>
+      <div class="competition">AI Fest 2024 - Finalist</div>
+      <div class="competition">Hackathon Sylhet - 2nd Place</div>
+    </div>
+  </div>
+
+  <script>
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('active');
+  }
+
+  function logout() {
+    localStorage.removeItem("token");
+    window.location.href = "/student-signup.html";
+  }
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("You are not logged in.");
+      window.location.href = "/student-signup.html";
+      return;
+    }
+
+    try {
+      const res = await fetch("https://loopin-1.onrender.com/profile", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        const user = data.student;
+
+        document.getElementById("student-name").textContent = user.name;
+        document.getElementById("student-interests").textContent = user.interests.join(", ");
+        document.getElementById("profile-university").textContent = user.university;
+        document.getElementById("profile-department").textContent = user.department;
+        document.getElementById("profile-session").textContent = user.session;
+        document.getElementById("profile-birthday").textContent = new Date(user.birthday).toDateString();
+        document.getElementById("profile-phone").textContent = user.phone;
+
+      } else {
+        alert("⚠️ Couldn't fetch profile: " + data.message);
+        window.location.href = "/student-signup.html";
+      }
+    } catch (err) {
+      console.error("Error fetching profile:", err);
+      alert("Something went wrong. Try again later.");
+    }
+  });
+  </script>
+</body>
+</html>
