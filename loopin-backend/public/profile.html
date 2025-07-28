@@ -148,7 +148,7 @@
   <!-- Profile Section -->
   <div class="profile-container">
     <div class="profile-header">
-      <img id="profile-image" src="https://via.placeholder.com/100" alt="Profile Picture" />
+      
       <div>
         <h2 id="student-name">Loading...</h2>
         <p id="student-interests">Fetching interests...</p>
@@ -182,20 +182,20 @@
     document.getElementById('sidebar').classList.toggle('active');
   }
 
-  function logout() {
-    localStorage.removeItem("token");
-    window.location.href = "/student-signup.html";
-  }
+ // function logout() {
+   // localStorage.removeItem("token");
+   // window.location.href = "/student-signup.html";
+ // }
 
   document.addEventListener("DOMContentLoaded", async () => {
     const token = localStorage.getItem("token");
+    console.log("Token:", token);
 
-    if (!token) {
-      alert("You are not logged in.");
-      window.location.href = "../../auth/signup.html";
+//if (!token) {
+ // alert("⚠️ You are not logged in. Token is missing.");
+  // window.location.href = "../../auth/signup.html";
+  //return;}
 
-      return;
-    }
 
     try {
       const res = await fetch("https://loopin-1.onrender.com/profile", {
@@ -205,28 +205,41 @@
         },
       });
 
-      const data = await res.json();
+      const contentType = res.headers.get("content-type");
+      console.log("Response Content-Type:", contentType);
 
-      if (res.ok) {
-        const user = data.student;
+      //if (!res.ok) {
+      //  const errMsg = await res.text();
+      //  console.error("Non-200 Response:", errMsg);
+      //  alert("⚠️ Couldn't fetch profile.");
+      //  window.location.href = "/student-signup.html";
+     //   return;
+    //  }
 
-        document.getElementById("student-name").textContent = user.name;
-        document.getElementById("student-interests").textContent = user.interests.join(", ");
-        document.getElementById("profile-university").textContent = user.university;
-        document.getElementById("profile-department").textContent = user.department;
-        document.getElementById("profile-session").textContent = user.session;
-        document.getElementById("profile-birthday").textContent = new Date(user.birthday).toDateString();
-        document.getElementById("profile-phone").textContent = user.phone;
-
-      } else {
-        alert("⚠️ Couldn't fetch profile: " + data.message);
-        window.location.href = "/student-signup.html";
+      if (!contentType || !contentType.includes("application/json")) {
+        const errText = await res.text();
+        console.error("Expected JSON, got:", errText);
+        return;
       }
+
+      const data = await res.json();
+      console.log("Data received:", data);
+
+      const user = data.student;
+      document.getElementById("student-name").textContent = user.name;
+      document.getElementById("student-interests").textContent = user.interests.join(", ");
+      document.getElementById("profile-university").textContent = user.university;
+      document.getElementById("profile-department").textContent = user.department;
+      document.getElementById("profile-session").textContent = user.session;
+      document.getElementById("profile-birthday").textContent = new Date(user.birthday).toDateString();
+      document.getElementById("profile-phone").textContent = user.phone;
+
     } catch (err) {
-      console.error("Error fetching profile:", err);
+      console.error("Fetch Error:", err);
       alert("Something went wrong. Try again later.");
     }
   });
-  </script>
+</script>
+
 </body>
 </html>
