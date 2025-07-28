@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Edit Profile | LoopIn</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fdfcf8;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      color: #444;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0069d9;
+    }
+  </style>
+</head>
+<body>
+  <h2>Edit Your Profile</h2>
+
+  <form id="edit-profile-form">
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name" required />
+
+    <label for="university">University</label>
+    <input type="text" id="university" name="university" required />
+
+    <label for="department">Department</label>
+    <input type="text" id="department" name="department" required />
+
+    <label for="session">Session</label>
+    <input type="text" id="session" name="session" required />
+
+    <label for="birthday">Birthday</label>
+    <input type="date" id="birthday" name="birthday" />
+
+    <label for="phone">Phone Number</label>
+    <input type="text" id="phone" name="phone" />
+
+    <label for="interests">Interests</label>
+    <textarea id="interests" name="interests" rows="3"></textarea>
+
+    <button type="submit">Update Profile</button>
+  </form>
+
+  <script>
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("You must be logged in to edit your profile.");
+      window.location.href = "login.html";
+    }
+
+    // Prefill form with current data
+    document.addEventListener("DOMContentLoaded", async () => {
+      try {
+        const res = await fetch("https://loopin-1.onrender.com/profile", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
+
+        if (data.student) {
+          const s = data.student;
+          document.getElementById("name").value = s.name || "";
+          document.getElementById("university").value = s.university || "";
+          document.getElementById("department").value = s.department || "";
+          document.getElementById("session").value = s.session || "";
+          document.getElementById("birthday").value = s.birthday?.slice(0, 10) || "";
+          document.getElementById("phone").value = s.phone || "";
+          document.getElementById("interests").value = s.interests || "";
+        }
+      } catch (err) {
+        console.error("Failed to load profile:", err);
+        alert("Something went wrong loading your profile.");
+      }
+    });
+
+    // Handle form submit
+    document.getElementById("edit-profile-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const updatedData = {
+        name: document.getElementById("name").value,
+        university: document.getElementById("university").value,
+        department: document.getElementById("department").value,
+        session: document.getElementById("session").value,
+        birthday: document.getElementById("birthday").value,
+        phone: document.getElementById("phone").value,
+        interests: document.getElementById("interests").value,
+      };
+
+      try {
+        const res = await fetch("https://loopin-1.onrender.com/profile", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(updatedData),
+        });
+
+        if (res.ok) {
+          alert("✅ Profile updated successfully!");
+          window.location.href = "profile.html";
+        } else {
+          const errorData = await res.json();
+          alert("❌ Error: " + (errorData.message || "Failed to update"));
+        }
+      } catch (err) {
+        console.error("Error updating profile:", err);
+        alert("Something went wrong.");
+      }
+    });
+  </script>
+</body>
+</html>
