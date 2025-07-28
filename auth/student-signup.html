@@ -222,6 +222,7 @@ if (!email) {
     });
 
     document.getElementById('create-account').addEventListener('click', async () => {
+      const email = localStorage.getItem("verifiedEmail");
       const name = document.getElementById('name').value.trim();
       const university = document.getElementById('university').value.trim();
       const department = document.getElementById('department').value.trim();
@@ -264,6 +265,7 @@ if (!email) {
      try {
   const formData = {
     name,
+    email,
     university,
     department,
     session,
@@ -271,7 +273,7 @@ if (!email) {
     phone: countryCode + phone,
     password,
     interests,
-    email
+    
   };
 
   fetch("https://loopin-1.onrender.com/signup", {
@@ -284,6 +286,8 @@ if (!email) {
     if (data.token) {
       localStorage.setItem("token", data.token); // save token
       localStorage.setItem("verifiedEmail", email);
+      localStorage.removeItem("verifiedEmail");
+
 window.location.href = "../loopin-backend/public/profile.html";
 
     } else {

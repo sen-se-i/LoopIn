@@ -93,12 +93,15 @@
         });
 
        const text = await response.text();
+
 if (response.ok) {
   alert("✅ Verified successfully!");
-  localStorage.setItem("verifiedEmail", email); // ✅ THIS IS THE FIX
-  localStorage.removeItem("signupEmail");
+  localStorage.setItem("verifiedEmail", email);     // keep this
+  localStorage.setItem("emailVerified", "true");    // optional, for clarity
+  // localStorage.removeItem("signupEmail");       // optional to clean
   window.location.href = "class-role.html"; // or student-signup.html if that's next
 }
+
 else {
   alert("❌ " + text);
 }
