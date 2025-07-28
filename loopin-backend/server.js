@@ -137,14 +137,14 @@ app.post('/signup', async (req, res) => {
 
 // ✅ Login
 app.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+  const { phone, password } = req.body;  // change from email to phone
 
-  if (!email || !password) {
-    return res.status(400).json({ message: 'Email and password are required.' });
+  if (!phone || !password) {
+    return res.status(400).json({ message: 'Phone and password are required.' }); // update error message too
   }
 
   try {
-    const student = await Student.findOne({ email });
+    const student = await Student.findOne({ phone });  // find by phone instead of email
 
     if (!student) {
       return res.status(404).json({ message: 'User not found.' });
@@ -154,16 +154,17 @@ app.post('/login', async (req, res) => {
       return res.status(401).json({ message: 'Invalid password.' });
     }
 
-    const token = jwt.sign({ email: student.email }, JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ phone: student.phone }, JWT_SECRET, { expiresIn: '7d' });
 
     res.status(200).json({ message: '✅ Login successful.', token });
+
   } catch (err) {
     console.error("❌ Login error:", err);
     res.status(500).json({ message: '❌ Internal server error.' });
   }
 });
 
-// ✅ Profile (protected)
+
 app.get('/profile', async (req, res) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) return res.status(401).send("❌ Unauthorized");
@@ -173,7 +174,10 @@ app.get('/profile', async (req, res) => {
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    const user = await Student.findOne({ email: decoded.email });
+    console.log("Decoded JWT:", decoded);
+
+    const user = await Student.findOne({ email: new RegExp(`^${decoded.email}$`, 'i') });
+    console.log("User found:", user);
 
     if (!user) return res.status(404).send("❌ User not found");
 
@@ -195,6 +199,9 @@ app.get('/profile', async (req, res) => {
     res.status(401).send("❌ Invalid or expired token");
   }
 });
+
+
+
 
 // 🌐 Serve profile.html directly
 app.get('/profile.html', (req, res) => {
