@@ -5,7 +5,7 @@ const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
-const path = require('path'); // ✅ NEW
+const path = require('path');
 const Student = require('./models/Student');
 
 dotenv.config();
@@ -18,17 +18,15 @@ const EMAIL_ADDRESS = process.env.EMAIL_ADDRESS;
 const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD;
 const JWT_SECRET = process.env.JWT_SECRET || "loopin_secret_key";
 
+// ✅ Safety check
 if (!MONGO_URI || !EMAIL_ADDRESS || !EMAIL_PASSWORD) {
   throw new Error("❌ Missing MONGO_URI, EMAIL_ADDRESS, or EMAIL_PASSWORD in .env");
 }
 
-// ✅ Serve static files from the "public" folder
-app.use(express.static(path.join(__dirname, 'public')));
-
 app.use(cors());
 app.use(bodyParser.json());
 
-// ✅ MongoDB Connection
+// ✅ MongoDB connection
 mongoose.connect(MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -40,13 +38,10 @@ mongoose.connect(MONGO_URI, {
 
 const verificationCollection = mongoose.connection.collection("verifications");
 
-// ✅ TTL index to auto-delete verification codes after 5 minutes
-verificationCollection.createIndex(
-  { createdAt: 1 },
-  { expireAfterSeconds: 300 }
-);
+// ✅ Expire verification codes after 5 mins
+verificationCollection.createIndex({ createdAt: 1 }, { expireAfterSeconds: 300 });
 
-// 📩 Email Sender
+// ✅ Email Sender
 async function sendVerificationEmail(email, code) {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -66,7 +61,7 @@ async function sendVerificationEmail(email, code) {
   await transporter.sendMail(mailOptions);
 }
 
-// 📮 Send Code
+// 📮 Send Verification Code
 app.post('/send-code', async (req, res) => {
   const { email } = req.body;
   if (!email) return res.status(400).send('Email is required.');
@@ -102,7 +97,7 @@ app.post('/verify-code', async (req, res) => {
   }
 });
 
-// ✅ Sign-Up Route
+// ✅ Sign Up
 app.post('/signup', async (req, res) => {
   try {
     const {
@@ -114,8 +109,13 @@ app.post('/signup', async (req, res) => {
       return res.status(400).json({ message: 'All fields are required.' });
     }
 
-    const existing = await Student.findOne({ phone });
-    if (existing) {
+    const existingEmail = await Student.findOne({ email });
+    if (existingEmail) {
+      return res.status(409).json({ message: 'Email already registered.' });
+    }
+
+    const existingPhone = await Student.findOne({ phone });
+    if (existingPhone) {
       return res.status(409).json({ message: 'Phone already registered.' });
     }
 
@@ -126,12 +126,7 @@ app.post('/signup', async (req, res) => {
 
     await newStudent.save();
 
-  const token = jwt.sign(
-  { id: newStudent._id, email: newStudent.email },
-  JWT_SECRET,
-  { expiresIn: '7d' }
-);
-
+    const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: '7d' });
     res.status(201).json({ message: '✅ Student account created.', token });
 
   } catch (err) {
@@ -140,7 +135,35 @@ app.post('/signup', async (req, res) => {
   }
 });
 
-// ✅ Profile Route (requires token)
+// ✅ Login
+app.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Email and password are required.' });
+  }
+
+  try {
+    const student = await Student.findOne({ email });
+
+    if (!student) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    if (student.password !== password) {
+      return res.status(401).json({ message: 'Invalid password.' });
+    }
+
+    const token = jwt.sign({ email: student.email }, JWT_SECRET, { expiresIn: '7d' });
+
+    res.status(200).json({ message: '✅ Login successful.', token });
+  } catch (err) {
+    console.error("❌ Login error:", err);
+    res.status(500).json({ message: '❌ Internal server error.' });
+  }
+});
+
+// ✅ Profile (protected)
 app.get('/profile', async (req, res) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) return res.status(401).send("❌ Unauthorized");
@@ -149,10 +172,10 @@ app.get('/profile', async (req, res) => {
   if (!token) return res.status(401).send("❌ Unauthorized");
 
   try {
-   const decoded = jwt.verify(token, JWT_SECRET);
-const user = await Student.findById(decoded.id);
-if (!user) return res.status(404).send("❌ User not found");
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const user = await Student.findOne({ email: decoded.email });
 
+    if (!user) return res.status(404).send("❌ User not found");
 
     res.json({
       student: {
@@ -173,16 +196,19 @@ if (!user) return res.status(404).send("❌ User not found");
   }
 });
 
-// 🌐 Optional: Route to serve profile.html explicitly
+// 🌐 Serve profile.html directly
 app.get('/profile.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'profile.html'));
 });
 
-// 🌐 Root & Ping Routes
+// ✅ Place this at the END
+app.use(express.static(path.join(__dirname, 'public')));
+
+// 🌐 Ping & Root
 app.get('/', (req, res) => res.send("✅ LoopIn backend is running."));
 app.get('/ping', (req, res) => res.send('✅ Backend is alive'));
 
-// 🚀 Start Server
+// 🚀 Start server
 app.listen(PORT, () => {
   console.log(`🚀 Server running at https://loopin-1.onrender.com/`);
 });
