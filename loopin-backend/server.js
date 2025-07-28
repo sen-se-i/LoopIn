@@ -5,6 +5,7 @@ const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
+const path = require('path'); // ✅ NEW
 const Student = require('./models/Student');
 
 dotenv.config();
@@ -15,11 +16,14 @@ const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
 const EMAIL_ADDRESS = process.env.EMAIL_ADDRESS;
 const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD;
-const JWT_SECRET = process.env.JWT_SECRET || "loopin_secret_key"; // secure key!
+const JWT_SECRET = process.env.JWT_SECRET || "loopin_secret_key";
 
 if (!MONGO_URI || !EMAIL_ADDRESS || !EMAIL_PASSWORD) {
   throw new Error("❌ Missing MONGO_URI, EMAIL_ADDRESS, or EMAIL_PASSWORD in .env");
 }
+
+// ✅ Serve static files from the "public" folder
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -136,7 +140,6 @@ app.get('/profile', async (req, res) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) return res.status(401).send("❌ Unauthorized");
 
-  // Remove "Bearer " prefix
   const token = authHeader.split(' ')[1];
   if (!token) return res.status(401).send("❌ Unauthorized");
 
@@ -146,19 +149,18 @@ app.get('/profile', async (req, res) => {
 
     if (!user) return res.status(404).send("❌ User not found");
 
-   res.json({
-  student: {
-    name: user.name,
-    email: user.email,
-    department: user.department,
-    university: user.university,
-    session: user.session,
-    birthday: user.birthday,
-    phone: user.phone,
-    interests: user.interests
-  }
-});
-
+    res.json({
+      student: {
+        name: user.name,
+        email: user.email,
+        department: user.department,
+        university: user.university,
+        session: user.session,
+        birthday: user.birthday,
+        phone: user.phone,
+        interests: user.interests
+      }
+    });
 
   } catch (err) {
     console.error("❌ Token error:", err);
@@ -166,6 +168,10 @@ app.get('/profile', async (req, res) => {
   }
 });
 
+// 🌐 Optional: Route to serve profile.html explicitly
+app.get('/profile.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'profile.html'));
+});
 
 // 🌐 Root & Ping Routes
 app.get('/', (req, res) => res.send("✅ LoopIn backend is running."));
