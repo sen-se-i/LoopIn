@@ -217,7 +217,7 @@ app.get('/profile', async (req, res) => {
 //clubprofile 
 const Club = require('./models/Club');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+//const jwt = require('jsonwebtoken');
 
 // Club Signup Route
 app.post('/club-signup', async (req, res) => {
