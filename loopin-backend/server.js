@@ -163,7 +163,7 @@ app.post('/login', async (req, res) => {
   }
 });
 
-const jwt = require('jsonwebtoken');
+//const jwt = require('jsonwebtoken');
 
 function authenticateToken(req, res, next) {
   const authHeader = req.headers['authorization'];
