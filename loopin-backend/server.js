@@ -163,7 +163,22 @@ app.post('/login', async (req, res) => {
   }
 });
 
+const jwt = require('jsonwebtoken');
 
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1]; // Bearer <token>
+
+  if (!token) return res.status(401).json({ message: 'Access token required' });
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) return res.status(403).json({ message: 'Invalid token' });
+    req.user = user;
+    next();
+  });
+}
+
+//i guess this is profile 
 app.get('/profile', async (req, res) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) return res.status(401).send("❌ Unauthorized");
@@ -196,6 +211,65 @@ app.get('/profile', async (req, res) => {
   } catch (err) {
     console.error("❌ Token error:", err);
     res.status(401).send("❌ Invalid or expired token");
+  }
+});
+
+//clubprofile 
+const Club = require('./models/Club');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+// Club Signup Route
+app.post('/club-signup', async (req, res) => {
+  try {
+    const {
+      email,
+      orgName,
+      university,
+      established,
+      president,
+      phone,
+      password
+    } = req.body;
+
+    if (!email || !orgName || !university || !established || !president || !phone || !password) {
+      return res.status(400).json({ message: 'All fields are required.' });
+    }
+
+    // Check if club already exists
+    const existing = await Club.findOne({ email });
+    if (existing) {
+      return res.status(400).json({ message: 'Club already registered with this email.' });
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Save club
+    const newClub = new Club({
+      email,
+      orgName,
+      university,
+      established,
+      president,
+      phone,
+      password: hashedPassword
+    });
+
+    await newClub.save();
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { email, type: 'club' },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    res.status(201).json({ token });
+
+  } catch (error) {
+    console.error('Club signup error:', error);
+    res.status(500).json({ message: 'Internal server error.' });
   }
 });
 
