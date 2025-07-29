@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Organizer Sign Up - LoopIn</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Club Sign Up - LoopIn</title>
   <style>
     body {
       font-family: sans-serif;
@@ -11,7 +11,6 @@
       padding: 20px;
       margin: 0;
     }
-
     .form-container {
       max-width: 600px;
       margin: auto;
@@ -20,33 +19,26 @@
       border-radius: 12px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
-
     h2 {
       text-align: center;
       margin-bottom: 20px;
-      color: #007bff;
-      border: 2px solid #007bff;
-      padding: 10px;
-      border-radius: 12px;
-      background-color: #e6f0ff;
+      color: #007BFF;
+      border: 2px solid #007BFF;
+      padding: 12px;
+      border-radius: 16px;
+      background-color: #f0f8ff;
     }
-
     .floating-label {
       position: relative;
       margin-bottom: 20px;
     }
-
-    .floating-label input,
-    .floating-label select {
+    .floating-label input {
       width: 100%;
       padding: 12px 10px;
       border-radius: 6px;
       border: 1px solid #ccc;
       font-size: 16px;
-      background-color: white;
-      transition: all 0.3s ease;
     }
-
     .floating-label label {
       position: absolute;
       top: 12px;
@@ -57,170 +49,176 @@
       transition: all 0.2s ease;
       pointer-events: none;
     }
-
     .floating-label input:focus + label,
-    .floating-label input:not(:placeholder-shown) + label,
-    .floating-label select:focus + label,
-    .floating-label select:not([value=""]) + label {
+    .floating-label input:not(:placeholder-shown) + label {
       top: -10px;
       left: 8px;
       font-size: 12px;
-      color: #007bff;
+      color: #007BFF;
     }
-
-    label {
-      font-weight: 500;
+    .phone-container {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-top: 10px;
+      margin-bottom: 30px;
     }
-
+    .phone-container select {
+      width: 90px;
+      padding: 10px;
+      border-radius: 6px;
+    }
+    .phone-container input {
+      padding: 12px;
+      flex: 1;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
     .confirm-section {
       text-align: center;
       margin-top: 30px;
     }
-
     .confirm-section p {
       color: red;
-      font-weight: 300;
-      font-size: 12px;
-      font-style: italic;
+      font-weight: 400;
+      font-size: 14px;
     }
-
     .create-btn {
-      background-color: #007bff;
+      background-color: #007BFF;
       color: white;
-      padding: 12px 24px;
+      padding: 14px 30px;
       border: none;
-      border-radius: 20px;
-      font-size: 16px;
+      border-radius: 22px;
+      font-size: 18px;
       cursor: pointer;
       transition: background-color 0.3s;
     }
-
     .create-btn:hover {
-      background-color: #0b53a0;
-    }
-
-    .phone-input {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .phone-input select {
-      width: 80px;
-    }
-
-    input[type="file"] {
-      padding: 10px 0;
+      background-color: #0056b3;
     }
   </style>
 </head>
 <body>
   <div class="form-container">
-    <h2>Create Your Club Account</h2>
+    <h2>Create Organization Account</h2>
 
     <div class="floating-label">
-      <input type="text" id="club-name" placeholder=" " required>
-      <label for="club-name">Club/Organization Name</label>
+      <input type="text" id="orgName" placeholder=" " required>
+      <label for="orgName">Organization Name</label>
     </div>
 
     <div class="floating-label">
-      <input type="text" id="club-university" placeholder=" " required>
-      <label for="club-university">University</label>
+      <input type="text" id="university" placeholder=" " required>
+      <label for="university">University</label>
     </div>
 
     <div class="floating-label">
-      <input type="date" id="creation-date" placeholder=" " required>
-      <label for="creation-date">Date of Establishment</label>
+      <input type="date" id="established" placeholder=" " required>
+      <label for="established">Date of Establishment</label>
     </div>
 
     <div class="floating-label">
-      <input type="file" id="approval-doc" accept=".pdf,image/*" required>
-      <label for="approval-doc">Authorization Certificate (PDF/Image, max 10MB)</label>
+      <input type="text" id="president" placeholder=" " required>
+      <label for="president">President Name</label>
     </div>
 
-    <div class="floating-label">
-      <input type="text" id="president-name" placeholder=" " required>
-      <label for="president-name">President Name</label>
-    </div>
-
-    <div class="floating-label phone-input">
-      <select id="president-phone-code">
-        <option value="+880">+880</option>
+    <label for="president-phone">President's Contact Number</label>
+    <div class="phone-container">
+      <select id="country-code">
+        <option value="+880">+880 (BD)</option>
+        <option value="+91">+91 (IN)</option>
+        <option value="+1">+1 (US)</option>
       </select>
-      <input type="tel" id="president-phone" placeholder=" " required>
-    </div>
-    <div class="floating-label">
-      <label for="president-phone">President Phone Number</label>
+      <input type="text" id="president-phone" placeholder="1XXXXXXXXX" required>
     </div>
 
     <div class="floating-label">
-      <input type="text" id="vp-name" placeholder=" " required>
-      <label for="vp-name">Vice President Name</label>
-    </div>
-
-    <div class="floating-label phone-input">
-      <select id="vp-phone-code">
-        <option value="+880">+880</option>
-      </select>
-      <input type="tel" id="vp-phone" placeholder=" " required>
-    </div>
-    <div class="floating-label">
-      <label for="vp-phone">Vice President Phone Number</label>
-    </div>
-
-    <div class="floating-label phone-input">
-      <select id="official-phone-code">
-        <option value="+880">+880</option>
-      </select>
-      <input type="tel" id="official-phone" placeholder=" " required>
-    </div>
-    <div class="floating-label">
-      <label for="official-phone">Official Phone Number</label>
+      <input type="password" id="password" placeholder=" " required>
+      <label for="password">Password (min 6 chars, 1 number)</label>
     </div>
 
     <div class="floating-label">
-      <select id="club-field" required>
-        <option value="" disabled selected hidden></option>
-        <option value="Science">Science</option>
-        <option value="Cultural">Cultural</option>
-        <option value="IT">IT</option>
-        <option value="Photography">Photography</option>
-        <option value="Debating">Debating</option>
-        <option value="Business">Business</option>
-        <option value="Sports">Sports</option>
-      </select>
-      <label for="club-field">Select Field</label>
+      <input type="password" id="confirm-password" placeholder=" " required>
+      <label for="confirm-password">Confirm Password</label>
     </div>
 
     <div class="confirm-section">
-      <p>Check everything is correct before creating your account.</p>
-      <button class="create-btn" id="create-account">Create Account →</button>
+      <p>Make sure all information is correct.</p>
+      <button class="create-btn" id="create-club-account">Create Organization Account →</button>
     </div>
   </div>
 
   <script>
-    const createBtn = document.getElementById('create-account');
+    const email = localStorage.getItem("verifiedEmail");
+    if (!email) {
+      alert("⚠️ Email verification required.");
+      window.location.href = "signup.html";
+    }
 
-    createBtn.addEventListener('click', () => {
-      const requiredFields = [
-        'club-name', 'club-university', 'creation-date', 'approval-doc',
-        'president-name', 'president-phone', 'vp-name', 'vp-phone', 'official-phone', 'club-field'
-      ];
+    document.getElementById("create-club-account").addEventListener("click", async () => {
+      const orgName = document.getElementById("orgName").value.trim();
+      const university = document.getElementById("university").value.trim();
+      const established = document.getElementById("established").value;
+      const president = document.getElementById("president").value.trim();
+      const phone = document.getElementById("president-phone").value.trim();
+      const countryCode = document.getElementById("country-code").value;
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirm-password").value;
+
+      const fullPhone = countryCode + phone;
 
       const errors = [];
 
-      requiredFields.forEach(id => {
-        const el = document.getElementById(id);
-        if (!el || !el.value.trim()) {
-          errors.push(`Please fill in the ${id.replace(/-/g, ' ')} field.`);
-        }
-      });
+      if (!orgName || !university || !established || !president || !phone || !password || !confirmPassword) {
+        errors.push("Please fill all the fields.");
+      }
+
+      if (!/^1\d{9}$/.test(phone)) {
+        errors.push("Phone must be 10 digits and start with 1.");
+      }
+
+      if (password.length < 6 || !/\d/.test(password)) {
+        errors.push("Password must be 6+ characters and contain a number.");
+      }
+
+      if (password !== confirmPassword) {
+        errors.push("Passwords do not match.");
+      }
 
       if (errors.length > 0) {
-        alert(errors.join('\n'));
-      } else {
-        alert("Club account created successfully!");
-        // Backend integration here
+        alert(errors.join("\n"));
+        return;
+      }
+
+      const clubData = {
+        email,
+        orgName,
+        university,
+        established,
+        president,
+        phone: fullPhone,
+        password
+      };
+
+      try {
+        const res = await fetch("https://loopin-1.onrender.com/club-signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(clubData),
+        });
+
+        const data = await res.json();
+
+        if (data.token) {
+          localStorage.setItem("token", data.token);
+          localStorage.removeItem("verifiedEmail");
+          window.location.href = "../loopin-backend/public/clubprofile.html";
+        } else {
+          alert(data.message || "Signup failed.");
+        }
+      } catch (err) {
+        alert("⚠️ Server error. Try again later.");
+        console.error(err);
       }
     });
   </script>
